@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:message/component/main_button.dart';
 import 'package:message/data/token.dart';
 import 'package:message/network/loginModel.dart';
 import 'package:message/network/request.dart';
@@ -45,7 +46,8 @@ class _LoginState extends State<LoginScreen> {
       appBar: AppBar(
         title: Text("登录"),
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.all(12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -66,13 +68,12 @@ class _LoginState extends State<LoginScreen> {
               ),
             ),
             SizedBox(height: 40,),
-            RaisedButton(
-              child: Text("登录"),
-              onPressed: () {
-                login();
-            },),
+            MainButton(() {
+              login();
+            }, "登录")
           ],
         ),
+        
       ),
     );
   }

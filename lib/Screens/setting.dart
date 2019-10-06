@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:message/component/main_button.dart';
 import 'package:message/data/token.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -18,16 +19,14 @@ class _SettingState extends State<SettingScreen>  {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
+      body: Padding(
+        padding: EdgeInsets.all(12),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(
-              child: Text("退出"),
-              onPressed: () {
-                 ScopedModel.of<TokenDataWidget>(context, rebuildOnChange: true).setLoginState("", "");
-              },
-            )
+            MainButton((){
+              ScopedModel.of<TokenDataWidget>(context, rebuildOnChange: true).setLoginState("", "");
+            }, "退出"),
           ],
         ),
       ),
