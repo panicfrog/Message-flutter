@@ -89,29 +89,44 @@ class _ChatDetailState extends State<ChatDetailPage> {
                 },
               ),
             ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: inputController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "请输入"
+            Container(
+              padding: EdgeInsets.fromLTRB(22, 0, 12, 0),
+              color: Colors.white70,
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      controller: inputController,
+                      decoration: InputDecoration(
+                        hintText: "请输入聊天内容"
+                      ),
+                      maxLines: 4,
+                      minLines: 1,
                     ),
                   ),
-                ),
-                FlatButton(
-                  child: Text("提交"),
-                  onPressed: () {
-                    if (inputController.text != null && inputController.text.length > 0) {
-                      Websocket ws = new Websocket();
-                      print("object");
-                      ws.sendMessage(widget.userAccount, widget.identity, inputController.text, widget.type, ChatMessageType.Text);
-                    }
-                  },
-                )
-              ],
-            )
+                  FlatButton(
+                    padding: EdgeInsets.all(0),
+                    highlightColor: Colors.transparent,
+                    child: Container(
+                        child: Text("发送", style: TextStyle(color: Colors.white),),
+                        padding: EdgeInsets.fromLTRB(12, 6, 12, 6),
+                        margin: EdgeInsets.all(0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).accentColor,
+                          borderRadius: BorderRadius.all(Radius.circular(3))
+                        ),
+                      ),
+                    onPressed: () {
+                      if (inputController.text != null && inputController.text.length > 0) {
+                        Websocket ws = new Websocket();
+                        ws.sendMessage(widget.userAccount, widget.identity, inputController.text, widget.type, ChatMessageType.Text);
+                        inputController.clear();
+                      }
+                    },
+                  )
+                ],
+              ),
+            ),
           ],
         )
       )
