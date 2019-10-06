@@ -151,7 +151,7 @@ class _ChatDetailState extends State<ChatDetailPage> {
               Text(d.from),
               SizedBox(height: 12,),
               Container(
-                padding: EdgeInsets.all(12),
+                padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
                 decoration: BoxDecoration(
                   color: fromSelf ? Theme.of(context).accentColor : Colors.black12,
                   borderRadius: BorderRadius.all(Radius.circular(12))
