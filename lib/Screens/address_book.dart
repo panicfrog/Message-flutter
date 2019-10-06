@@ -34,13 +34,22 @@ class _AddressState extends State<AddressScreen> {
         contents[index].add(i);
       }
     });
-    _m.forEach((k, v){
-      String header = k == AddressFlagType.friend ? "好友" : "房间";
-      _is.add(AddressHeadingItem(header));
-      contents[v].forEach((c) {
-        _is.add(c);
-      });
+
+    _is.add(AddressHeadingItem("好友"));
+    contents[_m[AddressFlagType.friend]].forEach((c) {
+      _is.add(c);
     });
+    _is.add(AddressHeadingItem("群组"));
+    contents[_m[AddressFlagType.room]].forEach((c) {
+      _is.add(c);
+    });
+    // _m.forEach((k, v){
+    //   String header = k == AddressFlagType.friend ? "好友" : "群组";
+    //   _is.add(AddressHeadingItem(header));
+    //   contents[v].forEach((c) {
+    //     _is.add(c);
+    //   });
+    // });
     return _is;
   }
 
