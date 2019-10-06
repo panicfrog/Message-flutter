@@ -14,16 +14,16 @@ class MessageTabbedPage extends StatefulWidget {
 class _MessageTabbedPageState extends State<MessageTabbedPage> {
   int _selectedIndex = 0;
 
-  final List<String> myTabs = <String>["通讯录", "聊天", "设置",];
-  final List<Widget> pages = <Widget>[AddressScreen(title: "通讯录"), ChatScreen(title: "聊天"), SettingScreen(title: "设置")];
+  final List<String> myTabs = <String>["聊天", "通讯录", "设置",];
+  final List<Widget> pages = <Widget>[ChatScreen(title: "聊天"), AddressScreen(title: "通讯录"),  SettingScreen(title: "设置")];
 
   @override 
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: BottomNavigationBar(
             items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(icon: Icon(Icons.supervisor_account), title: Text(myTabs[0])),
-              BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text(myTabs[1])),
+              BottomNavigationBarItem(icon: Icon(Icons.chat), title: Text(myTabs[0])),
+              BottomNavigationBarItem(icon: Icon(Icons.supervisor_account), title: Text(myTabs[1])),
               BottomNavigationBarItem(icon: Icon(Icons.build), title: Text(myTabs[2])),
             ],
             currentIndex: _selectedIndex,
@@ -32,8 +32,8 @@ class _MessageTabbedPageState extends State<MessageTabbedPage> {
           ),
           body: IndexedStack(
                   children: <Widget>[
-                    AddressScreen(title: "通讯录"),
                     ChatScreen(title: "聊天"),
+                    AddressScreen(title: "通讯录"),
                     SettingScreen(title: "设置"),
                   ],
                    index: _selectedIndex,
