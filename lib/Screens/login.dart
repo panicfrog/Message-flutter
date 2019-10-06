@@ -83,7 +83,7 @@ class _LoginState extends State<LoginScreen> {
     var response = await Request.post("/login", {"account": _account, "passwd": _passwd});
     var data = JsonDecoder().convert(response.body);
     var loginData = LoginData.fromJson(data);
-    if (loginData.data != "") {
+    if (loginData != null && loginData.data != null && loginData.data != "") {
       await ScopedModel.of<TokenDataWidget>(context, rebuildOnChange: true).setLoginState(loginData.data, _account);
     } else {
       

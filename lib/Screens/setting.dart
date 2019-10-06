@@ -22,7 +22,7 @@ class _SettingState extends State<SettingScreen>  {
       body: Padding(
         padding: EdgeInsets.all(12),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             MainButton((){
               ScopedModel.of<TokenDataWidget>(context, rebuildOnChange: true).setLoginState("", "");

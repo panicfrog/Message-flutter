@@ -34,7 +34,7 @@ class _AddressState extends State<AddressScreen> {
         contents[index].add(i);
       }
     });
-
+    if (_m.length == 0) { return _is;}
     _is.add(AddressHeadingItem("好友"));
     contents[_m[AddressFlagType.friend]].forEach((c) {
       _is.add(c);
@@ -43,13 +43,6 @@ class _AddressState extends State<AddressScreen> {
     contents[_m[AddressFlagType.room]].forEach((c) {
       _is.add(c);
     });
-    // _m.forEach((k, v){
-    //   String header = k == AddressFlagType.friend ? "好友" : "群组";
-    //   _is.add(AddressHeadingItem(header));
-    //   contents[v].forEach((c) {
-    //     _is.add(c);
-    //   });
-    // });
     return _is;
   }
 
@@ -72,6 +65,7 @@ class _AddressState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     final model = ScopedModel.of<TokenDataWidget>(context);
+    print("总长度：${_listItems.length}");
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
