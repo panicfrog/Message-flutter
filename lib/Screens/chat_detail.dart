@@ -83,9 +83,12 @@ class _ChatDetailState extends State<ChatDetailPage> {
             Flexible(
               child: ListView.builder(
                 itemCount: _messages.length,
-                itemExtent: 50,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(title: Text(_messages[index].content));
+                  // return ListTile(
+                  //   title: Text(_messages[index].from),
+                  //   subtitle: Text(_messages[index].content),
+                  // );
+                  return buildChatItem(context, index);
                 },
               ),
             ),
@@ -132,4 +135,32 @@ class _ChatDetailState extends State<ChatDetailPage> {
       )
     );
   }
+  Widget buildChatItem(BuildContext context, int index) {
+      final d = _messages[index];
+      bool fromSelf = false;
+      if (d.from == widget.userAccount) {// 自己发的
+        fromSelf = true;
+      } else { // 别人发的
+        fromSelf = false;
+      }
+
+      return Padding(
+        padding: EdgeInsets.fromLTRB(fromSelf ? 75 : 12, 6,  fromSelf ? 12 : 75, 6),
+        child: Column(
+            children: <Widget>[
+              Text(d.from),
+              SizedBox(height: 12,),
+              Container(
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: fromSelf ? Theme.of(context).accentColor : Colors.black12,
+                  borderRadius: BorderRadius.all(Radius.circular(12))
+                ),
+                child: Text(d.content, style: TextStyle(color: fromSelf ? Colors.white : Colors.black),),
+              ),
+            ],
+            crossAxisAlignment: fromSelf ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          ),
+        );
+    }
 }
