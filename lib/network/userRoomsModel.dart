@@ -1,3 +1,5 @@
+import 'package:message/network/userFriendsModel.dart';
+
 class UserFriendsModel {
   
   List<Friends> data;
@@ -28,7 +30,7 @@ class UserFriendsModel {
   }
 }
 
-class Friends {
+class Friends implements AddressFlag {
   String account;
   int status;
 
@@ -45,4 +47,13 @@ class Friends {
     data['status'] = this.status;
     return data;
   }
+
+  @override
+  String get display => account;
+
+  @override
+  String get identifier => account;
+
+  @override 
+  AddressFlagType get type => AddressFlagType.friend;
 }

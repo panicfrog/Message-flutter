@@ -18,8 +18,31 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressState extends State<AddressScreen> {
-  List<Room> _rooms = [];
-  List<Friends> _friends = [];
+  List<AddressFlag> _items = [];
+  List<AddressItme> get _listItems {
+    List<AddressItme> _is = [];
+    List<List<AddressFlag>> contents = [];
+    Map<AddressFlagType, int> _m = Map();
+    _items.forEach((i) {
+      if (!_m.containsKey(i.type)) {
+        _m[i.type] = _m.length;
+        List<AddressFlag> l = List<AddressFlag>();
+        l.add(i);
+        contents.add(l);
+      } else {
+        int index = _m[i.type];
+        contents[index].add(i);
+      }
+    });
+    _m.forEach((k, v){
+      String header = k == AddressFlagType.friend ? "好友" : "房间";
+      _is.add(AddressHeadingItem(header));
+      contents[v].forEach((c) {
+        _is.add(c);
+      });
+    });
+    return _is;
+  }
 
   @override
   initState() {
@@ -45,72 +68,40 @@ class _AddressState extends State<AddressScreen> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              '房间',
-              textAlign: TextAlign.left,
-            ),
-            Flexible(
-              child: ListView.builder(
-                itemCount: _rooms.length,
-                itemExtent: 50,
-                itemBuilder: (BuildContext context, int index) {
-                  return  Container(
-                      color: Colors.orange,
-                      child: ListTile(
-                        title: Text(
-                          _rooms[index].roomName,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatDetailPage(
-                                        type: ChatType.Room,
-                                        identity: _rooms[index].roomIdentifier,
-                                        nickName: _rooms[index].roomName,
-                                        userAccount: model.userAccount,
-                                      )));
-                        },
-                      ));
-                },
-              ),
-            ),
-            Text(
-              "好友",
-              textAlign: TextAlign.left,
-            ),
-            Flexible(
-                child: ListView.builder(
-              itemCount: _friends.length,
-              itemExtent: 50,
-              itemBuilder: (BuildContext context, int index) {
-                return Container(
-                    color: Colors.orange,
-                    child: ListTile(
-                      title: Text(_friends[index].account, style: TextStyle(color: Colors.white)),
-                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatDetailPage(
-                                      type: ChatType.Person,
-                                      identity: _friends[index].account,
-                                      nickName: _friends[index].account,
-                                      userAccount: model.userAccount,
-                                    )
-                                  )
-                                );
-                      },
-                    )
-                  );
-              },
-            ))
-          ],
-        ),
+        child: ListView.builder(
+          itemCount: _listItems.length,
+          itemExtent: 50,
+          itemBuilder: (BuildContext context, int index){
+            final i = _listItems[index];
+            if (i is AddressHeadingItem) {
+              return Container(
+                color: Colors.lightBlue,
+                child: ListTile(
+                  title: Text(i.heading, style: TextStyle(color: Colors.white),),
+                ),
+              );
+            } else if (i is AddressFlag) {
+              return Container(
+                color: Colors.white,
+                child: ListTile(
+                  title: Text(i.display),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (ctx) => ChatDetailPage(
+                        type: i.type == AddressFlagType.room ? ChatType.Room : ChatType.Person,
+                        identity: i.identifier,
+                        nickName: i.display,
+                        userAccount: model.userAccount,
+                      )
+                    ));
+                  },
+                ),
+              );
+            } else {
+              return Container();
+            }
+          },
+        )
       ),
     );
   }
@@ -120,15 +111,25 @@ class _AddressState extends State<AddressScreen> {
     var data = JsonDecoder().convert(response.body);
     UserRoomsModel model = UserRoomsModel.fromJson(data);
     setState(() {
-      _rooms = model.data;
+      _items.removeWhere((t){ return t.type == AddressFlagType.room; });
+      _items.addAll(model.data);
     });
   }
 
   void getFriends(String token) async {
     var response = await Request.get("/auth/user/friends");
     var data = JsonDecoder().convert(response.body);
-    print(data);
     UserFriendsModel model = UserFriendsModel.fromJson(data);
-    _friends = model.data;
+    setState(() {
+      _items.removeWhere((t){ return t.type == AddressFlagType.friend; });
+      _items.addAll(model.data);
+    });
   }
+}
+
+abstract class AddressItme {}
+
+class AddressHeadingItem implements AddressItme {
+  final String heading;
+  AddressHeadingItem(this.heading);
 }

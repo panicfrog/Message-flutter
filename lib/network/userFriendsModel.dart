@@ -1,3 +1,13 @@
+import 'package:message/Screens/addressBook.dart';
+
+enum AddressFlagType { room, friend }
+
+abstract class AddressFlag implements AddressItme {
+  String get identifier;
+  String get display;
+  AddressFlagType get type;
+}
+
 class UserRoomsModel {
   List<Room> data;
   String message;
@@ -27,7 +37,7 @@ class UserRoomsModel {
   }
 }
 
-class Room {
+class Room implements AddressFlag {
   String owner;
   String roomIdentifier;
   String roomName;
@@ -47,4 +57,13 @@ class Room {
     data['room_name'] = this.roomName;
     return data;
   }
+
+  @override
+  String get display => roomName;
+
+  @override
+  String get identifier => roomIdentifier;
+
+  @override 
+  AddressFlagType get type => AddressFlagType.room;
 }
