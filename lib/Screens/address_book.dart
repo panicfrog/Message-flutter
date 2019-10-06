@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:message/Screens/chatDetail.dart';
+import 'package:message/Screens/chat_detail.dart';
 import 'package:message/data/token.dart';
 import 'package:message/network/request.dart';
-import 'package:message/network/userFriendsModel.dart';
-import 'package:message/network/userRoomsModel.dart';
+import 'package:message/network/user_friends_model.dart';
+import 'package:message/network/user_rooms_model.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

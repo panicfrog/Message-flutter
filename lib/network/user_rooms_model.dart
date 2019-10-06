@@ -1,4 +1,4 @@
-import 'package:message/network/userFriendsModel.dart';
+import 'package:message/network/user_friends_model.dart';
 
 class UserFriendsModel {
   

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:message/component/main_button.dart';
 import 'package:message/data/token.dart';
-import 'package:message/network/loginModel.dart';
+import 'package:message/network/login_model.dart';
 import 'package:message/network/request.dart';
 import 'package:scoped_model/scoped_model.dart';
 
