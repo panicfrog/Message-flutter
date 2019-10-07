@@ -54,9 +54,20 @@ class _ChatDetailState extends State<ChatDetailPage> {
       });
     } else {
       ws.msgStream.listen((msg) {
-        setState(() {
-          _messages.add(msg);
-        });
+        print("webosckt listen ${msg.toJson()} identity: ${widget.identity}");
+        if (msg.mode == 1) { // 单聊
+          if((msg.from == widget.userAccount && msg.to == widget.identity) || (msg.from == widget.identity && msg.to == widget.userAccount)) {
+            setState(() {
+              _messages.add(msg);
+            });
+          }
+        } else if (msg.mode == 2) { // 群聊
+          if (msg.to == widget.identity) {
+            setState(() {
+              _messages.add(msg);
+            });
+          }
+        }
       });
     }
   }
@@ -78,7 +89,11 @@ class _ChatDetailState extends State<ChatDetailPage> {
         title: Text(widget.nickName),
       ),
       body: SafeArea(
-        child: Column(
+        child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+          child: Column(
           children: <Widget>[
             Flexible(
               child: ListView.builder(
@@ -131,6 +146,7 @@ class _ChatDetailState extends State<ChatDetailPage> {
               ),
             ),
           ],
+        ),
         )
       )
     );

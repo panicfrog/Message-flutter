@@ -65,7 +65,6 @@ class _AddressState extends State<AddressScreen> {
   @override
   Widget build(BuildContext context) {
     final model = ScopedModel.of<TokenDataWidget>(context);
-    print("总长度：${_listItems.length}");
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -113,6 +112,7 @@ class _AddressState extends State<AddressScreen> {
     var response = await Request.get("/auth/user/rooms");
     var data = JsonDecoder().convert(response.body);
     UserRoomsModel model = UserRoomsModel.fromJson(data);
+    if (model == null || model.data == null) { return ;}
     setState(() {
       _items.removeWhere((t){ return t.type == AddressFlagType.room; });
       _items.addAll(model.data);
@@ -123,6 +123,7 @@ class _AddressState extends State<AddressScreen> {
     var response = await Request.get("/auth/user/friends");
     var data = JsonDecoder().convert(response.body);
     UserFriendsModel model = UserFriendsModel.fromJson(data);
+    if (model == null || model.data == null) { return ;}
     setState(() {
       _items.removeWhere((t){ return t.type == AddressFlagType.friend; });
       _items.addAll(model.data);
