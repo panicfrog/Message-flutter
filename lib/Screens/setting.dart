@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:message/blocs/application_bloc.dart';
+import 'package:message/blocs/bloc_provider.dart';
 import 'package:message/component/main_button.dart';
-import 'package:message/data/token.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 class SettingScreen extends StatefulWidget {
   SettingScreen({Key key, this.title}) : super(key: key);
@@ -12,6 +12,13 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingState extends State<SettingScreen>  {
+  ApplicationBloc _authBloc;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _authBloc = BlocProvider.of<ApplicationBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +32,7 @@ class _SettingState extends State<SettingScreen>  {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             MainButton((){
-              ScopedModel.of<TokenDataWidget>(context, rebuildOnChange: true).setLoginState("", "");
+              _authBloc.setLoginState("", "");
             }, "退出"),
           ],
         ),

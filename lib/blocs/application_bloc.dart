@@ -23,6 +23,16 @@ class ApplicationBloc implements BlocBase {
     }
   }
 
+  setLoginState(String t, u) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var isSuccess = await prefs.setString(TOKEN_KEY, t);
+    var uIsSuccess = await prefs.setString(USER_ACCOUNT_KEY, u);
+    if (isSuccess && uIsSuccess) {
+      token$.add(t);
+      userAccount$.add(u);
+    }
+  }
+
   @override
   void dispose() {
     token$.close();

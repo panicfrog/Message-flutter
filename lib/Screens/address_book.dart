@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:message/Screens/chat_detail.dart';
 import 'package:message/Static/strings.dart';
-import 'package:message/data/token.dart';
+import 'package:message/blocs/application_bloc.dart';
+import 'package:message/blocs/bloc_provider.dart';
 import 'package:message/network/dio_request.dart';
 import 'package:message/network/user_friends_model.dart';
 import 'package:message/network/user_rooms_model.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -17,6 +17,8 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressState extends State<AddressScreen> {
+  ApplicationBloc appBloc;
+
   List<AddressFlag> _items = [];
   List<AddressItme> get _listItems {
     List<AddressItme> _is = [];
@@ -51,6 +53,12 @@ class _AddressState extends State<AddressScreen> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    appBloc = BlocProvider.of<ApplicationBloc>(context);
+  }
+
   request() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var _token = prefs.getString(TOKEN_KEY);
@@ -62,13 +70,17 @@ class _AddressState extends State<AddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final model = ScopedModel.of<TokenDataWidget>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Center(
-        child: ListView.builder(
+        child:
+
+          StreamBuilder<String>(
+            stream: appBloc.userAccount$.stream,
+            builder: (context, snapshot) {
+            return  ListView.builder(
           itemCount: _listItems.length,
           itemExtent: 50,
           itemBuilder: (BuildContext context, int index){
@@ -91,7 +103,7 @@ class _AddressState extends State<AddressScreen> {
                         type: i.type == AddressFlagType.room ? ChatType.Room : ChatType.Person,
                         identity: i.identifier,
                         nickName: i.display,
-                        userAccount: model.userAccount,
+                        userAccount: snapshot.data,
                       )
                     ));
                   },
@@ -101,7 +113,11 @@ class _AddressState extends State<AddressScreen> {
               return Container();
             }
           },
-        )
+        );
+            },
+          )
+        
+         
       ),
     );
   }
