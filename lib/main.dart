@@ -20,38 +20,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-class MainBlocWidget extends StatefulWidget {
-  @override 
-  _MainBlocWidgetState createState() => _MainBlocWidgetState();
-}
-
-class _MainBlocWidgetState extends State<MainBlocWidget> {
-
-  ApplicationBloc appBloc;
-  @override 
-  Widget build(BuildContext context) {
-    return Center(
-        child: StreamBuilder<String>(
-          stream: appBloc.token$,
-          builder: (context, snapshot) {
-            if (snapshot.data.length > 0) { // 登录了
-              return Text("登录了");
-            } else {
-              return Text("为登录");
-            }
-          },
-        )
-      );
-  }
-
-  @override 
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    appBloc = BlocProvider.of<ApplicationBloc>(context);
-  }
-}
-
 class MainWidget extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => MainWidgetState();
