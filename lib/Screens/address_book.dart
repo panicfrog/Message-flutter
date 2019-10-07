@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:message/Screens/chat_detail.dart';
+import 'package:message/Static/strings.dart';
 import 'package:message/data/token.dart';
 import 'package:message/network/dio_request.dart';
 import 'package:message/network/user_friends_model.dart';
@@ -52,7 +53,7 @@ class _AddressState extends State<AddressScreen> {
 
   request() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var _token = prefs.getString("message.token");
+    var _token = prefs.getString(TOKEN_KEY);
     if (_token == null || _token.length == 0) {
       return;
     }

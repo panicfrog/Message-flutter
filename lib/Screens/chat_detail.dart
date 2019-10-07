@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:message/Static/strings.dart';
 import 'package:message/websocket/message.dart';
 import 'package:message/websocket/websocket.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -42,7 +43,7 @@ class _ChatDetailState extends State<ChatDetailPage> {
       ws.disconnect();
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var token = prefs.getString("message.token");
+    var token = prefs.getString(TOKEN_KEY);
     ws.connect(token);
     dealMessage(ws);
   }
@@ -54,7 +55,6 @@ class _ChatDetailState extends State<ChatDetailPage> {
       });
     } else {
       ws.msgStream.listen((msg) {
-        print("webosckt listen ${msg.toJson()} identity: ${widget.identity}");
         if (msg.mode == 1) { // 单聊
           if((msg.from == widget.userAccount && msg.to == widget.identity) || (msg.from == widget.identity && msg.to == widget.userAccount)) {
             setState(() {

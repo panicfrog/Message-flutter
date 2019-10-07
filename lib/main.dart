@@ -29,7 +29,6 @@ class MainWidgetState extends State<MainWidget> {
   @override 
   Widget build(BuildContext context) {
     final _token = ScopedModel.of<TokenDataWidget>(context, rebuildOnChange: true).token;
-    print("$_token");
     return _token == "" ? LoginScreen() : MessageTabbedPage();
   }
 

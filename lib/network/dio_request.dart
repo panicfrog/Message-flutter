@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:message/Static/strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'env.dart';
@@ -49,7 +50,7 @@ class DRequest{
 
   Future<void> _configToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("message.token");
+    String token = prefs.getString(TOKEN_KEY);
     if(token != null && token.length > 0) {
       dio.options.headers["token"] = token;
     } else if (dio.options.headers.containsKey("token")) {
