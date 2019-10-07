@@ -26,6 +26,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   scoped_model: ^1.0.1
   dio: ^3.0.3
+  rxdart: ^0.22.3
 
 dev_dependencies:
   flutter_test:
