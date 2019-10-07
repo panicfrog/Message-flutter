@@ -99,10 +99,6 @@ class _ChatDetailState extends State<ChatDetailPage> {
               child: ListView.builder(
                 itemCount: _messages.length,
                 itemBuilder: (BuildContext context, int index) {
-                  // return ListTile(
-                  //   title: Text(_messages[index].from),
-                  //   subtitle: Text(_messages[index].content),
-                  // );
                   return buildChatItem(context, index);
                 },
               ),

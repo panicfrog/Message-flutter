@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:message/component/main_button.dart';
 import 'package:message/data/token.dart';
+import 'package:message/network/dio_request.dart';
 import 'package:message/network/login_model.dart';
-import 'package:message/network/request.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -79,10 +77,8 @@ class _LoginState extends State<LoginScreen> {
   }
 
   void login() async {
-    print("{\"account\": $_account, \"passwd\": $_passwd}");
-    var response = await Request.post("/login", {"account": _account, "passwd": _passwd});
-    var data = JsonDecoder().convert(response.body);
-    var loginData = LoginData.fromJson(data);
+    var response = await DRequest().post("/login", body: {"account": _account, "passwd": _passwd});
+    var loginData = LoginData.fromJson(response.data);
     if (loginData != null && loginData.data != null && loginData.data != "") {
       await ScopedModel.of<TokenDataWidget>(context, rebuildOnChange: true).setLoginState(loginData.data, _account);
     } else {

@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:message/Screens/chat_detail.dart';
 import 'package:message/data/token.dart';
-import 'package:message/network/request.dart';
+import 'package:message/network/dio_request.dart';
 import 'package:message/network/user_friends_model.dart';
 import 'package:message/network/user_rooms_model.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -58,8 +56,7 @@ class _AddressState extends State<AddressScreen> {
     if (_token == null || _token.length == 0) {
       return;
     }
-    getRooms(_token);
-    getFriends(_token);
+    getAddressData(_token);
   }
 
   @override
@@ -108,25 +105,19 @@ class _AddressState extends State<AddressScreen> {
     );
   }
 
-  void getRooms(String token) async {
-    var response = await Request.get("/auth/user/rooms");
-    var data = JsonDecoder().convert(response.body);
-    UserRoomsModel model = UserRoomsModel.fromJson(data);
-    if (model == null || model.data == null) { return ;}
+  void getAddressData(String token) async {
+    var responses = await Future.wait([DRequest().get("/auth/user/rooms"), DRequest().get("/auth/user/friends")]);
+    UserRoomsModel roomModel = UserRoomsModel.fromJson(responses[0].data);
+    UserFriendsModel userModel = UserFriendsModel.fromJson(responses[1].data);
     setState(() {
-      _items.removeWhere((t){ return t.type == AddressFlagType.room; });
-      _items.addAll(model.data);
-    });
-  }
-
-  void getFriends(String token) async {
-    var response = await Request.get("/auth/user/friends");
-    var data = JsonDecoder().convert(response.body);
-    UserFriendsModel model = UserFriendsModel.fromJson(data);
-    if (model == null || model.data == null) { return ;}
-    setState(() {
-      _items.removeWhere((t){ return t.type == AddressFlagType.friend; });
-      _items.addAll(model.data);
+      if (roomModel != null && roomModel.data != null) {
+        _items.removeWhere((t){ return t.type == AddressFlagType.room; });
+        _items.addAll(roomModel.data);
+      }
+      if (userModel != null && userModel.data != null) {
+        _items.removeWhere((t){ return t.type == AddressFlagType.friend; });
+        _items.addAll(userModel.data);
+      }
     });
   }
 }
