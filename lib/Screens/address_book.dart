@@ -35,7 +35,9 @@ class _AddressState extends State<AddressScreen> {
         contents[index].add(i);
       }
     });
-    if (_m.length == 0) { return _is;}
+    if (_m.length == 0) {
+      return _is;
+    }
     _is.add(AddressHeadingItem("好友"));
     contents[_m[AddressFlagType.friend]].forEach((c) {
       _is.add(c);
@@ -75,64 +77,72 @@ class _AddressState extends State<AddressScreen> {
         title: Text(widget.title),
       ),
       body: Center(
-        child:
-
-          StreamBuilder<String>(
-            stream: appBloc.userAccount$.stream,
-            builder: (context, snapshot) {
-            return  ListView.builder(
-          itemCount: _listItems.length,
-          itemExtent: 50,
-          itemBuilder: (BuildContext context, int index){
-            final i = _listItems[index];
-            if (i is AddressHeadingItem) {
-              return Container(
-                color: Colors.lightBlue,
-                child: ListTile(
-                  title: Text(i.heading, style: TextStyle(color: Colors.white),),
-                ),
-              );
-            } else if (i is AddressFlag) {
-              return Container(
-                color: Colors.white,
-                child: ListTile(
-                  title: Text(i.display),
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (ctx) => ChatDetailPage(
-                        type: i.type == AddressFlagType.room ? ChatType.Room : ChatType.Person,
-                        identity: i.identifier,
-                        nickName: i.display,
-                        userAccount: snapshot.data,
-                      )
-                    ));
-                  },
-                ),
-              );
-            } else {
-              return Container();
-            }
-          },
-        );
+          child: StreamBuilder<String>(
+        stream: appBloc.userAccount$.stream,
+        builder: (context, snapshot) {
+          return ListView.builder(
+            itemCount: _listItems.length,
+            itemExtent: 50,
+            itemBuilder: (BuildContext context, int index) {
+              final i = _listItems[index];
+              if (i is AddressHeadingItem) {
+                return Container(
+                  color: Colors.lightBlue,
+                  child: ListTile(
+                    title: Text(
+                      i.heading,
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                );
+              } else if (i is AddressFlag) {
+                return Container(
+                  color: Colors.white,
+                  child: ListTile(
+                    title: Text(i.display),
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (ctx) => ChatDetailPage(
+                                    type: i.type == AddressFlagType.room
+                                        ? ChatType.Room
+                                        : ChatType.Person,
+                                    identity: i.identifier,
+                                    nickName: i.display,
+                                    userAccount: snapshot.data,
+                                  )));
+                    },
+                  ),
+                );
+              } else {
+                return Container();
+              }
             },
-          )
-        
-         
-      ),
+          );
+        },
+      )),
     );
   }
 
   void getAddressData(String token) async {
-    var responses = await Future.wait([DRequest().get("/auth/user/rooms"), DRequest().get("/auth/user/friends")]);
+    var responses = await Future.wait([
+      DRequest().get("/auth/user/rooms"),
+      DRequest().get("/auth/user/friends")
+    ]);
     UserRoomsModel roomModel = UserRoomsModel.fromJson(responses[0].data);
     UserFriendsModel userModel = UserFriendsModel.fromJson(responses[1].data);
     setState(() {
       if (roomModel != null && roomModel.data != null) {
-        _items.removeWhere((t){ return t.type == AddressFlagType.room; });
+        _items.removeWhere((t) {
+          return t.type == AddressFlagType.room;
+        });
         _items.addAll(roomModel.data);
       }
       if (userModel != null && userModel.data != null) {
-        _items.removeWhere((t){ return t.type == AddressFlagType.friend; });
+        _items.removeWhere((t) {
+          return t.type == AddressFlagType.friend;
+        });
         _items.addAll(userModel.data);
       }
     });

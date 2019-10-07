@@ -13,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginState extends State<LoginScreen> {
-
   ApplicationBloc _authBloc;
 
   String _account;
@@ -24,7 +23,7 @@ class _LoginState extends State<LoginScreen> {
 
   @override
   void initState() {
-    _accountEditController.addListener((){
+    _accountEditController.addListener(() {
       _account = _accountEditController.text;
     });
     _passwdEditController.addListener(() {
@@ -38,61 +37,57 @@ class _LoginState extends State<LoginScreen> {
     super.didChangeDependencies();
     _authBloc = BlocProvider.of<ApplicationBloc>(context);
   }
-    
-      @override
-      void dispose() {
-        _accountEditController.dispose();
-        _passwdEditController.dispose();
-        super.dispose();
-      }
-    
-      @override
-      Widget build(BuildContext context) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("登录"),
-          ),
-          body: Padding(
-            padding: EdgeInsets.all(12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                TextField(
-                  controller: _accountEditController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "account"
-                  ),
-                ),
-                SizedBox(height: 40,),
-                TextField(
-                  controller: _passwdEditController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "password"
-                  ),
-                ),
-                SizedBox(height: 40,),
-                MainButton(() {
-                  login();
-                }, "登录")
-              ],
+
+  @override
+  void dispose() {
+    _accountEditController.dispose();
+    _passwdEditController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("登录"),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(12),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            TextField(
+              controller: _accountEditController,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(), labelText: "account"),
             ),
-            
-          ),
-        );
-      }
-    
-      void login() async {
-        var response = await DRequest().post("/login", body: {"account": _account, "passwd": _passwd});
-        var loginData = LoginData.fromJson(response.data);
-        if (loginData != null && loginData.data != null && loginData.data != "") {
-          await _authBloc.setLoginState(loginData.data, _account);
-        } else {
-          
-        }
-      }
-    
-    
-    }
+            SizedBox(
+              height: 40,
+            ),
+            TextField(
+              controller: _passwdEditController,
+              obscureText: true,
+              decoration: InputDecoration(
+                  border: OutlineInputBorder(), labelText: "password"),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            MainButton(() {
+              login();
+            }, "登录")
+          ],
+        ),
+      ),
+    );
+  }
+
+  void login() async {
+    var response = await DRequest()
+        .post("/login", body: {"account": _account, "passwd": _passwd});
+    var loginData = LoginData.fromJson(response.data);
+    if (loginData != null && loginData.data != null && loginData.data != "") {
+      await _authBloc.setLoginState(loginData.data, _account);
+    } else {}
+  }
+}

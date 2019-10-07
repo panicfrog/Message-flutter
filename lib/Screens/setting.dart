@@ -11,7 +11,7 @@ class SettingScreen extends StatefulWidget {
   _SettingState createState() => _SettingState();
 }
 
-class _SettingState extends State<SettingScreen>  {
+class _SettingState extends State<SettingScreen> {
   ApplicationBloc _authBloc;
 
   @override
@@ -31,7 +31,7 @@ class _SettingState extends State<SettingScreen>  {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
-            MainButton((){
+            MainButton(() {
               _authBloc.setLoginState("", "");
             }, "退出"),
           ],
@@ -39,5 +39,4 @@ class _SettingState extends State<SettingScreen>  {
       ),
     );
   }
-
 }

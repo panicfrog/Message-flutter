@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:message/Static/strings.dart';
 import 'package:message/websocket/message.dart';
@@ -8,7 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum ChatType { Person, Room }
 
 class ChatDetailPage extends StatefulWidget {
-  ChatDetailPage({this.identity, this.type, this.nickName, this.userAccount, Key key}): super(key: key);
+  ChatDetailPage(
+      {this.identity, this.type, this.nickName, this.userAccount, Key key})
+      : super(key: key);
   final String identity;
   final ChatType type;
   final String nickName;
@@ -55,13 +56,16 @@ class _ChatDetailState extends State<ChatDetailPage> {
       });
     } else {
       ws.msgStream.listen((msg) {
-        if (msg.mode == 1) { // 单聊
-          if((msg.from == widget.userAccount && msg.to == widget.identity) || (msg.from == widget.identity && msg.to == widget.userAccount)) {
+        if (msg.mode == 1) {
+          // 单聊
+          if ((msg.from == widget.userAccount && msg.to == widget.identity) ||
+              (msg.from == widget.identity && msg.to == widget.userAccount)) {
             setState(() {
               _messages.add(msg);
             });
           }
-        } else if (msg.mode == 2) { // 群聊
+        } else if (msg.mode == 2) {
+          // 群聊
           if (msg.to == widget.identity) {
             setState(() {
               _messages.add(msg);
@@ -72,11 +76,10 @@ class _ChatDetailState extends State<ChatDetailPage> {
     }
   }
 
-
-  @override 
+  @override
   void dispose() {
     inputController.dispose();
-    if (ws != null ) {
+    if (ws != null) {
       ws.disconnect();
     }
     super.dispose();
@@ -85,94 +88,108 @@ class _ChatDetailState extends State<ChatDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.nickName),
-      ),
-      body: SafeArea(
-        child: GestureDetector(
+        appBar: AppBar(
+          title: Text(widget.nickName),
+        ),
+        body: SafeArea(
+            child: GestureDetector(
           onTap: () {
             FocusScope.of(context).requestFocus(FocusNode());
           },
           child: Column(
-          children: <Widget>[
-            Flexible(
-              child: ListView.builder(
-                itemCount: _messages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return buildChatItem(context, index);
-                },
+            children: <Widget>[
+              Flexible(
+                child: ListView.builder(
+                  itemCount: _messages.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return buildChatItem(context, index);
+                  },
+                ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(22, 0, 12, 0),
-              color: Colors.white70,
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    child: TextField(
-                      controller: inputController,
-                      decoration: InputDecoration(
-                        hintText: "请输入聊天内容"
+              Container(
+                padding: EdgeInsets.fromLTRB(22, 0, 12, 0),
+                color: Colors.white70,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: TextField(
+                        controller: inputController,
+                        decoration: InputDecoration(hintText: "请输入聊天内容"),
+                        maxLines: 4,
+                        minLines: 1,
                       ),
-                      maxLines: 4,
-                      minLines: 1,
                     ),
-                  ),
-                  FlatButton(
-                    padding: EdgeInsets.all(0),
-                    highlightColor: Colors.transparent,
-                    child: Container(
-                        child: Text("发送", style: TextStyle(color: Colors.white),),
+                    FlatButton(
+                      padding: EdgeInsets.all(0),
+                      highlightColor: Colors.transparent,
+                      child: Container(
+                        child: Text(
+                          "发送",
+                          style: TextStyle(color: Colors.white),
+                        ),
                         padding: EdgeInsets.fromLTRB(12, 6, 12, 6),
                         margin: EdgeInsets.all(0),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).accentColor,
-                          borderRadius: BorderRadius.all(Radius.circular(3))
-                        ),
+                            color: Theme.of(context).accentColor,
+                            borderRadius: BorderRadius.all(Radius.circular(3))),
                       ),
-                    onPressed: () {
-                      if (inputController.text != null && inputController.text.length > 0) {
-                        Websocket ws = new Websocket();
-                        ws.sendMessage(widget.userAccount, widget.identity, inputController.text, widget.type, ChatMessageType.Text);
-                        inputController.clear();
-                      }
-                    },
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-        )
-      )
-    );
-  }
-  Widget buildChatItem(BuildContext context, int index) {
-      final d = _messages[index];
-      bool fromSelf = false;
-      if (d.from == widget.userAccount) {// 自己发的
-        fromSelf = true;
-      } else { // 别人发的
-        fromSelf = false;
-      }
-
-      return Padding(
-        padding: EdgeInsets.fromLTRB(fromSelf ? 75 : 12, 6,  fromSelf ? 12 : 75, 6),
-        child: Column(
-            children: <Widget>[
-              Text(d.from),
-              SizedBox(height: 12,),
-              Container(
-                padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-                decoration: BoxDecoration(
-                  color: fromSelf ? Theme.of(context).accentColor : Colors.black12,
-                  borderRadius: BorderRadius.all(Radius.circular(12))
+                      onPressed: () {
+                        if (inputController.text != null &&
+                            inputController.text.length > 0) {
+                          Websocket ws = new Websocket();
+                          ws.sendMessage(
+                              widget.userAccount,
+                              widget.identity,
+                              inputController.text,
+                              widget.type,
+                              ChatMessageType.Text);
+                          inputController.clear();
+                        }
+                      },
+                    )
+                  ],
                 ),
-                child: Text(d.content, style: TextStyle(color: fromSelf ? Colors.white : Colors.black),),
               ),
             ],
-            crossAxisAlignment: fromSelf ? CrossAxisAlignment.end : CrossAxisAlignment.start,
           ),
-        );
+        )));
+  }
+
+  Widget buildChatItem(BuildContext context, int index) {
+    final d = _messages[index];
+    bool fromSelf = false;
+    if (d.from == widget.userAccount) {
+      // 自己发的
+      fromSelf = true;
+    } else {
+      // 别人发的
+      fromSelf = false;
     }
+
+    return Padding(
+      padding:
+          EdgeInsets.fromLTRB(fromSelf ? 75 : 12, 6, fromSelf ? 12 : 75, 6),
+      child: Column(
+        children: <Widget>[
+          Text(d.from),
+          SizedBox(
+            height: 12,
+          ),
+          Container(
+            padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
+            decoration: BoxDecoration(
+                color:
+                    fromSelf ? Theme.of(context).accentColor : Colors.black12,
+                borderRadius: BorderRadius.all(Radius.circular(12))),
+            child: Text(
+              d.content,
+              style: TextStyle(color: fromSelf ? Colors.white : Colors.black),
+            ),
+          ),
+        ],
+        crossAxisAlignment:
+            fromSelf ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      ),
+    );
+  }
 }
