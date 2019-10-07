@@ -33,7 +33,7 @@ class MainWidgetState extends State<MainWidget> {
     return StreamBuilder<String>(
       stream: appBloc.token$.stream,
       builder: (context, snapshot) {
-        return snapshot.data.length > 0 ? MessageTabbedPage() : LoginScreen();
+        return (snapshot.data == null || snapshot.data.length == 0) ? LoginScreen() : MessageTabbedPage() ;
       },
     );
   }
