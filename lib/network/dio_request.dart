@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:message/network/base_model.dart';
 import 'package:message/static/strings.dart';
 import 'package:message/helper/Toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -57,10 +58,26 @@ class DRequest{
       return Future.error(e);
   }
 
+  // TODO: 定义自己的error 
+
   Future _dealBussinessError(Response res) {
     if (res.data == null) {
       print("response data null error: ${res.headers}, request: ${res.request}");
       return Future.error(DioError(error: Exception("response data null"), request: res.request, response: res));
+    }
+    var base = BaseModel.fromJson(res.data);
+    if (base == null) {
+      return Future.error(DioError(error: Exception("wrong response struct"), request: res.request, response: res));
+    } else if (1 == base.sc) { // 失败
+      return Future.error(DioError(error: Exception("失败"), request: res.request, response: res));
+    } else if (2 == base.sc) { // 参数错误
+      return Future.error(DioError(error: Exception("参数错误"), request: res.request, response: res));
+    } else if (3 == base.sc) { // 服务端错误
+      return Future.error(DioError(error: Exception("服务端错误"), request: res.request, response: res));
+    } else if (4 == base.sc) { // 未授权
+      return Future.error(DioError(error: Exception("未授权"), request: res.request, response: res));
+    } else if (5 == base.sc) { // token异常
+      return Future.error(DioError(error: Exception("token异常"), request: res.request, response: res));
     }
     return Future.value(res.data);
   }

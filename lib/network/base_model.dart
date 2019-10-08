@@ -1,5 +1,5 @@
 class BaseModel {
-  Map<String, dynamic> data;
+  dynamic data;
   String message;
   int sc;
 
