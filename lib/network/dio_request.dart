@@ -49,7 +49,6 @@ class DRequest{
   }
 
   Future<dynamic> _dealRequestError(DioError e) {
-    MToast.show(e.toString());
     if(e.response != null) {
         print("data: ${e.response.data}, headers: ${e.response.headers}, request: ${e.response.request}");
       } else {

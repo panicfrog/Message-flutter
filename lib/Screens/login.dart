@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:message/blocs/application_bloc.dart';
 import 'package:message/blocs/bloc_provider.dart';
@@ -84,12 +85,14 @@ class _LoginState extends State<LoginScreen> {
   }
 
   void login() async {
-    var response = await DRequest()
+    try {
+      var response = await DRequest()
         .post("/login", body: {"account": _account, "passwd": _passwd});
-    var loginData = LoginData.fromJson(response);
-    if (loginData != null && loginData.data != null && loginData.data != "") {
+      var loginData = LoginData.fromJson(response);
       MToast.show("登录成功");
       await _authBloc.setLoginState(loginData.data, _account);
-    } else {}
+    } on DioError catch(e) {
+      MToast.show(e.toString());
+    }
   }
 }
