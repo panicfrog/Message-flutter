@@ -50,49 +50,61 @@ class _LoginState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("登录"),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-              controller: _accountEditController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(), labelText: "account"),
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            TextField(
-              controller: _passwdEditController,
-              obscureText: true,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(), labelText: "password"),
-            ),
-            SizedBox(
-              height: 40,
-            ),
-            MainButton(() {
-              login();
-            }, "登录")
-          ],
+        appBar: AppBar(
+          title: Text("登录"),
         ),
-      ),
-    );
+        body: Padding(
+          padding: EdgeInsets.all(12),
+          child: GestureDetector(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+            },
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                TextField(
+                  controller: _accountEditController,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), labelText: "account"),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                TextField(
+                  controller: _passwdEditController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), labelText: "password"),
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                MainButton(() {
+                  login();
+                }, "登录")
+              ],
+            ),
+          ),
+        ));
   }
 
   void login() async {
+    if (_account == null || _account.length == 0) {
+        MToast.show("请输入账号");
+        return;
+      }
+    if (_passwd == null || _passwd.length == 0) {
+      MToast.show("请输入密码");
+      return;
+    }
     try {
       var response = await DRequest()
-        .post("/login", body: {"account": _account, "passwd": _passwd});
+          .post("/login", body: {"account": _account, "passwd": _passwd});
       var loginData = LoginData.fromJson(response);
       MToast.show("登录成功");
       await _authBloc.setLoginState(loginData.data, _account);
-    } on DioError catch(e) {
-      MToast.show(e.toString());
+    } on DioError catch (e) {
+      MToast.show(e.message);
     }
   }
 }

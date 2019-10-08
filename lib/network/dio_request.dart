@@ -68,7 +68,7 @@ class DRequest{
     if (base == null) {
       return Future.error(DioError(error: Exception("wrong response struct"), request: res.request, response: res));
     } else if (1 == base.sc) { // 失败
-      return Future.error(DioError(error: Exception("失败"), request: res.request, response: res));
+      return Future.error(DioError(error: Exception(base.message), request: res.request, response: res));
     } else if (2 == base.sc) { // 参数错误
       return Future.error(DioError(error: Exception("参数错误"), request: res.request, response: res));
     } else if (3 == base.sc) { // 服务端错误

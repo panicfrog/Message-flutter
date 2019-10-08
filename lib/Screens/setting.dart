@@ -32,11 +32,15 @@ class _SettingState extends State<SettingScreen> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             MainButton(() {
-              _authBloc.setLoginState("", "");
+            _loginOut();
             }, "退出"),
           ],
         ),
       ),
     );
   }
+  _loginOut() async {
+   await _authBloc.setLoginState("", "");
+  }
+
 }
