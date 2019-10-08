@@ -7,7 +7,7 @@ class MToast {
       msg: msg,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.CENTER,
-      timeInSecForIos: 1,
+      timeInSecForIos: 1, 
       backgroundColor: Colors.white54,
       textColor: Colors.black,
       fontSize: 16,
