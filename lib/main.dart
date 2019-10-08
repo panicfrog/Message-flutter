@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:message/Screens/Tabbed.dart';
-import 'package:message/Screens/login.dart';
+import 'package:message/screens/Tabbed.dart';
+import 'package:message/screens/login.dart';
 import 'package:message/blocs/application_bloc.dart';
 import 'package:message/blocs/bloc_provider.dart';
 

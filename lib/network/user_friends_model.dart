@@ -1,4 +1,4 @@
-import 'package:message/Screens/address_book.dart';
+import 'package:message/screens/address_book.dart';
 
 enum AddressFlagType { room, friend }
 

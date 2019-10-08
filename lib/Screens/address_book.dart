@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:message/Screens/chat_detail.dart';
+import 'package:message/screens/chat_detail.dart';
 import 'package:message/Static/strings.dart';
 import 'package:message/blocs/application_bloc.dart';
 import 'package:message/blocs/bloc_provider.dart';

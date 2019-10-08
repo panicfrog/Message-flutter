@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:message/Screens/setting.dart';
+import 'package:message/screens/setting.dart';
 
 import 'address_book.dart';
 import 'chat.dart';
