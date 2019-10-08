@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:message/screens/chat_detail.dart';
-import 'package:message/Static/strings.dart';
+import 'package:message/static/strings.dart';
 import 'package:message/blocs/application_bloc.dart';
 import 'package:message/blocs/bloc_provider.dart';
 import 'package:message/network/dio_request.dart';
@@ -130,8 +130,8 @@ class _AddressState extends State<AddressScreen> {
       DRequest().get("/auth/user/rooms"),
       DRequest().get("/auth/user/friends")
     ]);
-    UserRoomsModel roomModel = UserRoomsModel.fromJson(responses[0].data);
-    UserFriendsModel userModel = UserFriendsModel.fromJson(responses[1].data);
+    UserRoomsModel roomModel = UserRoomsModel.fromJson(responses[0]);
+    UserFriendsModel userModel = UserFriendsModel.fromJson(responses[1]);
     setState(() {
       if (roomModel != null && roomModel.data != null) {
         _items.removeWhere((t) {

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:message/Static/strings.dart';
+import 'package:message/static/strings.dart';
+import 'package:message/helper/Toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'env.dart';
@@ -16,35 +17,23 @@ class DRequest{
     dio.options.headers = {"platform": "ios", "Content-type": "application/json"};
   }
 
-  Future<Response> post(String path, { Map<String, dynamic> body }) async {
+  Future<T> post<T>(String path, { Map<String, dynamic> body }) async {
     await _configToken();
     try {
-      // TODO: 这里还需要处理业务错误
-      return dio.post(path, data: body);
+      var response = await dio.post<T>(path, data: body);
+      return _dealBussinessError(response);
     } on DioError catch(e) {
-      // TODO: 处理请求异常
-      if(e.response != null) {
-        print("data: ${e.response.data}, headers: ${e.response.headers}, request: ${e.response.request}");
-      } else {
-        print("headers: ${e.response.headers}, request: ${e.response.request}");
-      }
-      return Future.error(e);
+      return _dealRequestError(e);
     }
   }
 
-  Future<Response<T>> get<T>(String path, { Map<String, dynamic> params }) async {
+  Future<T> get<T>(String path, { Map<String, dynamic> params }) async {
     await _configToken();
     try {
-      // TODO: 这里还需要处理业务错误
-      return dio.get(path, queryParameters: params);
+      var response = await dio.get<T>(path, queryParameters: params);
+      return _dealBussinessError(response);
     } on DioError catch(e) {
-      // TODO: 处理请求异常
-      if(e.response != null) {
-        print("data: ${e.response.data}, headers: ${e.response.headers}, request: ${e.response.request}");
-      } else {
-        print("headers: ${e.response.headers}, request: ${e.response.request}");
-      }
-      return Future.error(e);
+      return _dealRequestError(e);
     }
   }
 
@@ -56,5 +45,23 @@ class DRequest{
     } else if (dio.options.headers.containsKey("token")) {
       dio.options.headers.remove("token");
     }
+  }
+
+  Future<dynamic> _dealRequestError(DioError e) {
+    MToast.show(e.toString());
+    if(e.response != null) {
+        print("data: ${e.response.data}, headers: ${e.response.headers}, request: ${e.response.request}");
+      } else {
+        print("headers: ${e.response.headers}, request: ${e.response.request}");
+      }
+      return Future.error(e);
+  }
+
+  Future _dealBussinessError(Response res) {
+    if (res.data == null) {
+      print("response data null error: ${res.headers}, request: ${res.request}");
+      return Future.error(DioError(error: Exception("response data null"), request: res.request, response: res));
+    }
+    return Future.value(res.data);
   }
 }

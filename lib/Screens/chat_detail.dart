@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:message/Static/strings.dart';
+import 'package:message/static/strings.dart';
 import 'package:message/websocket/message.dart';
 import 'package:message/websocket/websocket.dart';
 import 'package:shared_preferences/shared_preferences.dart';

@@ -86,7 +86,7 @@ class _LoginState extends State<LoginScreen> {
   void login() async {
     var response = await DRequest()
         .post("/login", body: {"account": _account, "passwd": _passwd});
-    var loginData = LoginData.fromJson(response.data);
+    var loginData = LoginData.fromJson(response);
     if (loginData != null && loginData.data != null && loginData.data != "") {
       MToast.show("登录成功");
       await _authBloc.setLoginState(loginData.data, _account);

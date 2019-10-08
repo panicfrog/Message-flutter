@@ -1,4 +1,4 @@
-import 'package:message/Static/strings.dart';
+import 'package:message/static/strings.dart';
 import 'package:message/blocs/bloc_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
