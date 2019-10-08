@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:message/helper/notification_center.dart';
 import 'package:message/network/base_model.dart';
 import 'package:message/static/strings.dart';
 import 'package:message/helper/Toast.dart';
@@ -74,8 +75,10 @@ class DRequest{
     } else if (3 == base.sc) { // 服务端错误
       return Future.error(DioError(error: Exception("服务端错误"), request: res.request, response: res));
     } else if (4 == base.sc) { // 未授权
+      NotificationCenter().send(NOTIFICATIION_TOKEN_INVALID);
       return Future.error(DioError(error: Exception("未授权"), request: res.request, response: res));
     } else if (5 == base.sc) { // token异常
+      NotificationCenter().send(NOTIFICATIION_TOKEN_INVALID);
       return Future.error(DioError(error: Exception("token异常"), request: res.request, response: res));
     }
     return Future.value(res.data);

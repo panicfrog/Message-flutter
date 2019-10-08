@@ -4,6 +4,7 @@ import 'package:message/screens/Tabbed.dart';
 import 'package:message/screens/login.dart';
 import 'package:message/blocs/application_bloc.dart';
 import 'package:message/blocs/bloc_provider.dart';
+import 'package:message/static/strings.dart';
 
 void main() => runApp(MyApp());
 
@@ -29,6 +30,20 @@ class MainWidget extends StatefulWidget {
 class MainWidgetState extends State<MainWidget> {
   ApplicationBloc appBloc;
 
+  @override
+  void initState() {
+    super.initState();
+    NotificationCenter().addObserver(NOTIFICATIION_TOKEN_INVALID, this, ({dynamic body}) {
+      _loginOut();
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    NotificationCenter().removeObserver(this);
+  }
+
   @override 
   Widget build(BuildContext context) {
     return StreamBuilder<String>(
@@ -43,5 +58,9 @@ class MainWidgetState extends State<MainWidget> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     appBloc = BlocProvider.of<ApplicationBloc>(context);
+  }
+
+  _loginOut() async {
+    await appBloc.setLoginState("", "");
   }
 }
